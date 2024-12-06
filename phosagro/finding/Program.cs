@@ -1,35 +1,43 @@
-﻿using phosagro.finding.model;
+﻿using universitycollege.finding.model;
+using universitycollege.finding.data;
 using System;
-using System.Collections.Generic;
 
-namespace phosagro.finding
+namespace universitycollege.finding
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            List<HillPoint> points = new List<HillPoint>();
+            int n = 25;
+            int m = 25;
+            Map map = new Map(n, m);
 
-            Map map = new Map(5, 5);
+            Random rnd = new Random();
+            TopologyGenerator generator = new TopologyGenerator();
 
-            StartPoint start = new StartPoint(0, 0);
-            EndPoint end = new EndPoint(5, 5);
-            HillPoint hill = new HillPoint(2, 2, 2);
-
-            points.Add(hill);
-
-            foreach (HillPoint p in points) 
+            for (int i = 0; i < 25; i++)
             {
-                map.MapArr[p.X, p.Y] = p.TopCoefficient;
+                generator.AddHill(map, new Point(rnd.Next(n - 1), rnd.Next(m - 1), 5));
             }
 
-            for (int i = 0; i < 5; i++)
+
+            for (int i = 0; i < n; i++)
             {
-                for (int j = 0; j < 5; j++)
+                for (int j = 0; j < m; j++)
                 {
-                    Console.Write(map.MapArr[i, j] + "  ");
+                    int height = map.MapArr[i, j].Height;
+                    
+                    if (height > 0)
+                    {
+                        var color = System.Drawing.ColorTranslator.FromHtml(InMemory.Colors[height]);
+                        Colorful.Console.Write(map.MapArr[i, j] + "  ", color);
+                    }
+                    else
+                    {
+                        Colorful.Console.Write(map.MapArr[i, j] + "  ");
+                    }
                 }
-                Console.WriteLine();
+                Colorful.Console.WriteLine();
             }
         }
     }
