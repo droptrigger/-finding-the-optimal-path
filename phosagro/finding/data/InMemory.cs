@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace phosagro.finding.data
+namespace universitycollege.finding.data
 {
     public struct InMemory
     {
