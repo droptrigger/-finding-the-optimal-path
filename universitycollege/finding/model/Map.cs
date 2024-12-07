@@ -1,11 +1,12 @@
-﻿using universitycollege.finding.data;
-using universitycollege.finding.exception;
+﻿using universitycollege.finding.view;
+using System;
 
 namespace universitycollege.finding.model
 {
     public class Map
     {
         private Point[,] _mapArr;
+
         private int _mapSizeX;
         private int _mapSizeY;
 
@@ -23,7 +24,18 @@ namespace universitycollege.finding.model
         {
             if (dimensionX > (int)InMemory.Constants.MAX_X_MAP || dimensionY > (int)InMemory.Constants.MAX_Y_MAP)
             {
-                throw new IndexOutOfMapException("Error!");
+                string message = "";
+
+                if (dimensionX > (int)InMemory.Constants.MAX_X_MAP)
+                {
+                    message += $"Max X value is: {InMemory.Constants.MAX_X_MAP}\n";
+                }
+                if (dimensionY > (int)InMemory.Constants.MAX_Y_MAP)
+                {
+                    message += $"Max Y value is: {InMemory.Constants.MAX_Y_MAP}";
+                }
+
+                throw new IndexOutOfRangeException(message);
             }
             else
             {
@@ -31,14 +43,24 @@ namespace universitycollege.finding.model
                 _mapSizeY = dimensionY;
 
                 _mapArr = new Point[dimensionX, dimensionY];
-                for (int i = 0; i < dimensionX; i++)
+                for (int x = 0; x < dimensionX; x++)
                 {
-                    for (int j = 0; j < dimensionY; j++)
+                    for (int y = 0; y < dimensionY; y++)
                     {
-                        _mapArr[i, j] = new Point(i, j);
+                        _mapArr[x, y] = new Point(x, y);
                     }
                 }
             }
+        }
+
+        public int GetHeight(int x, int y)
+        {
+            return _mapArr[x, y].Height;
+        }
+
+        public string GetCoordsPoint(int x, int y)
+        {
+            return "" + _mapArr[x, y].X + " " + _mapArr[x, y].Y;
         }
 
         /// <summary>
@@ -49,7 +71,7 @@ namespace universitycollege.finding.model
         /// <param name="point"></param>
         public void Update(int x, int y, Point point)
         {
-            _mapArr[y, x] = point;
+            _mapArr[x, y] = point; // In the array, x and y are swapped
         }
 
         public bool PointIsInAMap(Point point)
@@ -90,7 +112,19 @@ namespace universitycollege.finding.model
 
         public bool IsPointAreHigher(Point point)
         {
-            if (_mapArr[point.Y, point.X].Height < point.Height)
+            if (_mapArr[point.X, point.Y].Height < point.Height)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool IsPointAreBelow(Point point)
+        {
+            if (_mapArr[point.X, point.Y].Height > point.Height && _mapArr[point.X, point.Y].Height < 1)
             {
                 return true;
             }

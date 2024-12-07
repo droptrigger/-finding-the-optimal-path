@@ -1,4 +1,4 @@
-﻿using universitycollege.finding.data;
+﻿using universitycollege.finding.view;
 using universitycollege.finding.exception;
 
 namespace universitycollege.finding.model
@@ -41,13 +41,17 @@ namespace universitycollege.finding.model
         /// <param name="y">The Y coordinate</param>
         public Point(int x, int y)
         {
-            this._x = x;
-            this._y = y;
+            _x = x;
+            _y = y;
             _height = 0;
         }
 
         public override string ToString() 
         {
+            if (_height < 0)
+            {
+                return $"{-_height}";
+            }
             return $"{_height}";
         }
     }
