@@ -47,8 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="data\InMemory.cs" />
-    <Compile Include="exception\IndexOutOfMapException.cs" />
+    <Compile Include="view\InMemory.cs" />
     <Compile Include="exception\HeightOutOfMaxValueException.cs" />
     <Compile Include="model\Map.cs" />
     <Compile Include="model\Path.cs" />
