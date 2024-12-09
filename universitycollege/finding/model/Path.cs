@@ -5,29 +5,29 @@ namespace universitycollege.finding.model
 {
     public class Path
     {
-        private Point _startPoint;
-        private Point _endPoint;
-        private List<Point> _pathList = new List<Point>();
+        private sbyte[,] _startPoint;
+        private sbyte[,] _endPoint;
+        private List<sbyte[,]> _pathList = new List<sbyte[,]>();
 
-        public List<Point> PathList => _pathList;
-        public Point StartPoint => _startPoint;
-        public Point EndPoint => _endPoint;
+        public List<sbyte[,]> PathList => _pathList;
+        public sbyte[,] StartPoint => _startPoint;
+        public sbyte[,] EndPoint => _endPoint;
 
-        public Path(Point startPoint, Point endPoint) 
-        { 
+        public Path(sbyte[,] startPoint, sbyte[,] endPoint)
+        {
             _startPoint = startPoint;
             _endPoint = endPoint;
 
             _pathList.Add(startPoint);
         }
 
-        public void AddPoint(Point point)
+        public void AddPoint(sbyte[,] point)
         {
             _pathList.Add(point);
         }
 
-        public void RemovePoint(Point point) 
-        { 
+        public void RemovePoint(sbyte[,] point)
+        {
             _pathList.Remove(point);
         }
 
