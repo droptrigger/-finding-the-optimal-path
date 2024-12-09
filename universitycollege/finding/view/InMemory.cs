@@ -21,8 +21,8 @@ namespace universitycollege.finding.view
         public enum Constants
         {
             MAX_COEFF_VALUE = 5,
-            MAX_X_MAP = 100,
-            MAX_Y_MAP = 100
+            MAX_X_MAP = 1000,
+            MAX_Y_MAP = 1000
         }
     }
 }

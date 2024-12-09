@@ -5,12 +5,12 @@ namespace universitycollege.finding.model
 {
     public class Map
     {
-        private Point[,] _mapArr;
+        private sbyte[,] _mapArr;
 
         private int _mapSizeX;
         private int _mapSizeY;
 
-        public Point[,] MapArr => _mapArr;
+        public sbyte[,] MapArr => _mapArr;
         public int mapSizeX => _mapSizeX;
         public int mapSizeY => _mapSizeY;
 
@@ -42,25 +42,13 @@ namespace universitycollege.finding.model
                 _mapSizeX = dimensionX;
                 _mapSizeY = dimensionY;
 
-                _mapArr = new Point[dimensionX, dimensionY];
-                for (int x = 0; x < dimensionX; x++)
-                {
-                    for (int y = 0; y < dimensionY; y++)
-                    {
-                        _mapArr[x, y] = new Point(x, y);
-                    }
-                }
+                _mapArr = new sbyte[dimensionX, dimensionY];
             }
         }
 
         public int GetHeight(int x, int y)
         {
-            return _mapArr[x, y].Height;
-        }
-
-        public string GetCoordsPoint(int x, int y)
-        {
-            return "" + _mapArr[x, y].X + " " + _mapArr[x, y].Y;
+            return _mapArr[x, y];
         }
 
         /// <summary>
@@ -68,70 +56,36 @@ namespace universitycollege.finding.model
         /// </summary>
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
-        /// <param name="point"></param>
-        public void Update(int x, int y, Point point)
+        /// <param name="height">heigh</param>
+        public void Update(int x, int y, sbyte height)
         {
-            _mapArr[x, y] = point; // In the array, x and y are swapped
+            _mapArr[x, y] = height;
         }
 
-        public bool PointIsInAMap(Point point)
+        public bool PointIsInAMap(int x, int y)
         {
-            if (point.X < _mapSizeX && point.Y < _mapSizeY)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return (x < _mapSizeX && y < _mapSizeY);
         }
 
         public bool IsInAMap(int x, int y)
         {
-            if ((x < mapSizeX && y < mapSizeY) && (x >= 0 && y >= 0))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return ((x < mapSizeX && y < mapSizeY) && (x >= 0 && y >= 0));
         }
 
         public bool IsXInAMap(int x)
         {
-            if ((x < mapSizeX) && (x >= 0))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return ((x < mapSizeX) && (x >= 0));
         }
 
-        public bool IsPointAreHigher(Point point)
+        public bool IsPointAreHigher(int x, int y, int height)
         {
-            if (_mapArr[point.X, point.Y].Height < point.Height)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return (_mapArr[x, y] < height);
         }
 
-        public bool IsPointAreBelow(Point point)
+        public bool IsPointAreBelow(int x, int y, int height)
         {
-            if (_mapArr[point.X, point.Y].Height > point.Height && _mapArr[point.X, point.Y].Height < 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return (_mapArr[x, y] > height && _mapArr[x, y] < 1);
         }
     }
 }
+ 

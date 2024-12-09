@@ -51,7 +51,6 @@
     <Compile Include="exception\HeightOutOfMaxValueException.cs" />
     <Compile Include="model\Map.cs" />
     <Compile Include="model\Path.cs" />
-    <Compile Include="model\Point.cs" />
     <Compile Include="model\TopologyGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
