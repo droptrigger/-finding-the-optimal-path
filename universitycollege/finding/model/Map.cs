@@ -5,6 +5,17 @@ namespace universitycollege.finding.model
 {
     public class Map
     {
+        public struct Coords
+        {
+            public int x, y;
+
+            public Coords(int x, int y)
+            {
+                this.x = x;
+                this.y = y;
+            }
+        }
+
         private sbyte[,] _mapArr;
 
         private int _mapSizeX;

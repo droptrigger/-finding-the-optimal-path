@@ -47,12 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="controller\Controller.cs" />
+    <Compile Include="model\PathFinder.cs" />
     <Compile Include="view\InMemory.cs" />
-    <Compile Include="exception\HeightOutOfMaxValueException.cs" />
     <Compile Include="model\Map.cs" />
-    <Compile Include="model\Path.cs" />
     <Compile Include="model\TopologyGenerator.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="view\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
