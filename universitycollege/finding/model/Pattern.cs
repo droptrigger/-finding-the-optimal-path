@@ -5,11 +5,11 @@ using static universitycollege.finding.model.Map;
 
 namespace universitycollege.finding.model
 {
-    public class Pattern // TODO: Разделить загрузку из файла и работу с паттернами
+    public class Pattern
     {
         private sbyte[,] _patternArr;
-        private string _filePath = InMemory.PathToPattern;
         private Coords _coordsCenter;
+        private string _name;
 
         /// <summary>
         /// Конструктор, если необходимо прочитать шаблон из папки
@@ -17,8 +17,8 @@ namespace universitycollege.finding.model
         /// <param name="fileName">Название шаблона</param>
         public Pattern(string fileName) 
         {
-            _filePath += fileName;
-            GetPatternArr();
+            _patternArr = ReaderPatternFile.GetPatternArr(fileName);
+            _name = fileName;
             GetCenterCoords();
         }
 
@@ -30,55 +30,9 @@ namespace universitycollege.finding.model
         public Pattern(sbyte[,] patternArr, string fileName)
         {
             _patternArr = patternArr;
-            _filePath += fileName + ".txt";
-            CreatePattern(patternArr);
+            _name = fileName;
+            ReaderPatternFile.CreatePattern(patternArr, fileName);
             GetCenterCoords();
-        }
-
-        /// <summary>
-        /// Метод получения массива из файла
-        /// </summary>
-        private void GetPatternArr() // TODO: В отдельный класс
-        {
-            string[] lines = File.ReadAllLines(_filePath);
-
-            int rows = lines.Length;
-            int cols = lines[0].Split(' ').Length;
-
-            _patternArr = new sbyte[rows, cols];
-
-            for (int i = 0; i < rows; i++)
-            {
-                string[] numbers = lines[i].Split(' ');
-                for (int j = 0; j < cols; j++)
-                {
-                    _patternArr[i, j] = sbyte.Parse(numbers[j]);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Метод для создания нового шаблона из массива
-        /// </summary>
-        /// <param name="patternArray">Массив, заполенный цифрами</param>
-        private void CreatePattern(sbyte[,] patternArray) // TODO: В отдельный класс
-        {
-            StreamWriter writer = new StreamWriter(_filePath);
-
-            for (int i = 0; i < patternArray.GetLength(0); i++)
-            {
-                for (int j = 0; j < patternArray.GetLength(1); j++)
-                {
-                    writer.Write(patternArray[i, j]);
-                    if (j < patternArray.GetLength(1) - 1)
-                    {
-                        writer.Write(" ");
-                    }
-                }
-                writer.WriteLine();
-            }
-
-            writer.Close();
         }
 
         private void GetCenterCoords()
@@ -87,20 +41,26 @@ namespace universitycollege.finding.model
             _coordsCenter.y = _patternArr.GetLength(1) / 2;
         }
 
+        /// <summary>
+        /// Метод для получения координат, на которых будет рисунок паттерна
+        /// </summary>
+        /// <param name="map">Ссылка на объект класса Map</param>
+        /// <param name="centerCoords">Координаты точки, где будет центр паттерна</param>
+        /// <returns></returns>
         public Dictionary<Coords, sbyte> GetPatternCoords(Map map, Coords centerCoords)
         {
             Dictionary<Coords, sbyte> tempDict = new Dictionary<Coords, sbyte>();
 
-            for (int i = 0; i < _patternArr.GetLength(0); i++)
+            for (int collums = 0; collums < _patternArr.GetLength(0); collums++)
             {
-                for (int j = 0; j < _patternArr.GetLength(1); j++)
+                for (int row = 0; row < _patternArr.GetLength(1); row++)
                 {
-                    Coords mapCoords = new Coords(centerCoords.x + i - (_patternArr.GetLength(0) / 2),
-                                           centerCoords.y + j - (_patternArr.GetLength(1) / 2));
+                    Coords mapCoords = new Coords(centerCoords.x + collums - (_patternArr.GetLength(0) / 2),
+                                           centerCoords.y + row - (_patternArr.GetLength(1) / 2));
 
                     if (map.IsInAMap(mapCoords) && 
-                        (map.IsPointAreBelow(mapCoords, _patternArr[i, j]) || map.IsPointAreHigher(mapCoords, _patternArr[i, j])))
-                        tempDict[mapCoords] = (sbyte)_patternArr[i, j];
+                        (map.IsPointAreBelow(mapCoords, _patternArr[collums, row]) || map.IsPointAreHigher(mapCoords, _patternArr[collums, row])))
+                        tempDict[mapCoords] = _patternArr[collums, row];
                 }
             }
 
@@ -109,7 +69,7 @@ namespace universitycollege.finding.model
 
         public override string ToString()
         {
-            string pattern = $"{System.IO.Path.GetFileName(_filePath)}\n";
+            string pattern = _name + "\n";
             
             for (int i = 0; i < _patternArr.GetLength(0); i++)
             {

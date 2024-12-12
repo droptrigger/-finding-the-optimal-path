@@ -30,11 +30,11 @@ namespace universitycollege.finding
                 Console.WriteLine(pattern);
             }
 
-            Path optimazePath = new Path(map);
-            HardPath hardPath = new HardPath(map);
+            Path optimazePath = new Path(map, InMemory.TypesOfPath.OPTIMAZE);
+            Path hardPath = new Path(map, InMemory.TypesOfPath.HARD);
 
             Console.WriteLine(optimazePath.Amount + " " + hardPath.Amount);
-            if (optimazePath.Amount <= hardPath.Amount)
+            if (optimazePath < hardPath)
             {
                 Console.WriteLine("Путь дешевле чем напрямую");
             }
@@ -51,7 +51,6 @@ namespace universitycollege.finding
                 $"{(double)(memoryAfter - memoryBefore) / 1024 / 1024} Мегабайт",
                 Color.Cyan);
         }
-
 
         public static void DrawMapToConsole(Map map, Path path)
         {

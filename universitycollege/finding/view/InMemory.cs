@@ -4,7 +4,7 @@ namespace universitycollege.finding.view
 {
     public struct InMemory
     {
-        public const string PathToPattern = @"..\resources\patterns\";
+        public const string PathToPattern = @"..\..\..\..\resources\patterns\";
 
         public static readonly Dictionary<int, string> Colors = new Dictionary<int, string>
         {
@@ -17,12 +17,18 @@ namespace universitycollege.finding.view
             { 3, "#FF4500" },
             { 4, "#B22222" },
             { 5, "#8B0000" }
-        }; // TODO: Добавить высоты
+        };
 
         public enum Constants
         {
             MAX_X_MAP = 1000,
             MAX_Y_MAP = 1000
+        }
+
+        public enum TypesOfPath
+        {
+            OPTIMAZE = 0,
+            HARD = 1
         }
 
         public static readonly Dictionary<sbyte, double> Bicicle = new Dictionary<sbyte, double>

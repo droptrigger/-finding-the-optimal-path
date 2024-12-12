@@ -13,6 +13,11 @@ namespace universitycollege.finding.model
             _map = map;
         }
 
+        /// <summary>
+        /// Метод рисования по паттерну
+        /// </summary>
+        /// <param name="pattern">Ссылка на объект класса Pattern</param>
+        /// <param name="coords">Координаты центра</param>
         public void AppPatternTopology(Pattern pattern, Coords coords)
         {
             Dictionary<Coords, sbyte> PatternCoords = pattern.GetPatternCoords(_map, coords);

@@ -25,15 +25,17 @@ namespace universitycollege.finding.model
         public sbyte[,] MapArr => _mapArr;
         public int MapSizeX => _mapSizeX;
         public int MapSizeY => _mapSizeY;
+
+        // TODO: Доделать
         public sbyte MaxHeight;
         public sbyte StepHeight;
 
         /// <summary>
-        /// Constructor
+        /// Конструктор
         /// </summary>
-        /// <param name="dimensionX">Width</param>
-        /// <param name="dimensionY">Height</param>
-        /// <exception cref="IndexOutOfMapException"></exception>
+        /// <param name="dimensionX">Ширина</param>
+        /// <param name="dimensionY">Высота</param>
+        /// <exception cref="IndexOutOfMapException">Ошибка, если превышены допустимые значения высоты и/или ширины</exception>
         public Map(int dimensionX, int dimensionY)
         {
             if (dimensionX > (int)InMemory.Constants.MAX_X_MAP || dimensionY > (int)InMemory.Constants.MAX_Y_MAP)
