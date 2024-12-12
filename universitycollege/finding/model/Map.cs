@@ -1,5 +1,6 @@
 ﻿using universitycollege.finding.view;
 using System;
+using static universitycollege.finding.model.Map;
 
 namespace universitycollege.finding.model
 {
@@ -22,15 +23,19 @@ namespace universitycollege.finding.model
         private int _mapSizeY;
 
         public sbyte[,] MapArr => _mapArr;
-        public int mapSizeX => _mapSizeX;
-        public int mapSizeY => _mapSizeY;
+        public int MapSizeX => _mapSizeX;
+        public int MapSizeY => _mapSizeY;
+
+        // TODO: Доделать
+        public sbyte MaxHeight;
+        public sbyte StepHeight;
 
         /// <summary>
-        /// Constructor
+        /// Конструктор
         /// </summary>
-        /// <param name="dimensionX">Width</param>
-        /// <param name="dimensionY">Height</param>
-        /// <exception cref="IndexOutOfMapException"></exception>
+        /// <param name="dimensionX">Ширина</param>
+        /// <param name="dimensionY">Высота</param>
+        /// <exception cref="IndexOutOfMapException">Ошибка, если превышены допустимые значения высоты и/или ширины</exception>
         public Map(int dimensionX, int dimensionY)
         {
             if (dimensionX > (int)InMemory.Constants.MAX_X_MAP || dimensionY > (int)InMemory.Constants.MAX_Y_MAP)
@@ -53,13 +58,16 @@ namespace universitycollege.finding.model
                 _mapSizeX = dimensionX;
                 _mapSizeY = dimensionY;
 
+                Random rnd = new Random();
+                MaxHeight = (sbyte)rnd.Next(127);
+                StepHeight = (sbyte)(MaxHeight / 5);
                 _mapArr = new sbyte[dimensionX, dimensionY];
             }
         }
 
-        public int GetHeight(int x, int y)
+        public sbyte GetHeight(Coords coords)
         {
-            return _mapArr[x, y];
+            return _mapArr[coords.x, coords.y];
         }
 
         /// <summary>
@@ -68,34 +76,34 @@ namespace universitycollege.finding.model
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
         /// <param name="height">heigh</param>
-        public void Update(int x, int y, sbyte height)
+        public void Update(Coords coords, sbyte height)
         {
-            _mapArr[x, y] = height;
+            _mapArr[coords.x, coords.y] = height;
         }
 
-        public bool PointIsInAMap(int x, int y)
+        public bool PointIsInAMap(Coords coords)
         {
-            return (x < _mapSizeX && y < _mapSizeY);
+            return (coords.x < _mapSizeX && coords.y < _mapSizeY);
         }
 
-        public bool IsInAMap(int x, int y)
+        public bool IsInAMap(Coords coords)
         {
-            return ((x < mapSizeX && y < mapSizeY) && (x >= 0 && y >= 0));
+            return ((coords.x < MapSizeX && coords.y < MapSizeY) && (coords.x >= 0 && coords.y >= 0));
         }
 
         public bool IsXInAMap(int x)
         {
-            return ((x < mapSizeX) && (x >= 0));
+            return ((x < MapSizeX) && (x >= 0));
         }
 
-        public bool IsPointAreHigher(int x, int y, int height)
+        public bool IsPointAreHigher(Coords coords, sbyte height)
         {
-            return (_mapArr[x, y] < height);
+            return (_mapArr[coords.x, coords.y] < height);
         }
 
-        public bool IsPointAreBelow(int x, int y, int height)
+        public bool IsPointAreBelow(Coords coords, sbyte height)
         {
-            return (_mapArr[x, y] > height && _mapArr[x, y] < 1);
+            return (_mapArr[coords.x, coords.y] > height && _mapArr[coords.x, coords.y] < 1);
         }
     }
 }

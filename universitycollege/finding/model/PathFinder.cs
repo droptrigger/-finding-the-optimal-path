@@ -1,177 +1,176 @@
 ﻿using System;
 using System.Collections.Generic;
+using universitycollege.finding.view;
+using static universitycollege.finding.model.Map;
 
 namespace universitycollege.finding.model
 {
     public class PathFinder
     {
         private Map _map;
+        private Dictionary<sbyte, double> _costDict;
+        private double DIAONAL = Math.Sqrt(2);
 
         public PathFinder(Map map)
         {
             _map = map;
         }
 
-        public List<Map.Coords> FindPath(Map.Coords start, Map.Coords end)
+        public List<Coords> FindPath(Coords start, Coords end)
         {
-            HashSet<Map.Coords> usableCoords = new HashSet<Map.Coords>();   // Координаты, на которые уже сходили
-            HashSet<Map.Coords> unusableCoords = new HashSet<Map.Coords>(); // Координаты, на которые еще не сходили
+            _costDict = InMemory.Bicicle;
+            HashSet<Coords> openSet = new HashSet<Coords>(); // Координаты, доступные для исследования
+            HashSet<Coords> closedSet = new HashSet<Coords>(); // Координаты, которые уже исследованы
 
-            Dictionary<Map.Coords, Map.Coords> dictOfThePath = new Dictionary<Map.Coords, Map.Coords>(); // TODO: 
+            Dictionary<Coords, Coords> pathDictionary = new Dictionary<Coords, Coords>(); // Словарь для восстановления пути
 
-            usableCoords.Add(start);
+            openSet.Add(start); // Добавляем начальную точку в открытые координаты
 
-            Dictionary<Map.Coords, double> gScore = new Dictionary<Map.Coords, double>(); // TODO: Создать класс
-            Dictionary<Map.Coords, double> fScore = new Dictionary<Map.Coords, double>(); // TODO: Создать класс
+            Dictionary<Coords, double> gScore = new Dictionary<Coords, double>(); // Словарь для хранения стоимости пути от стартовой до текущей клетки
+            Dictionary<Coords, double> fScore = new Dictionary<Coords, double>(); // Словарь для хранения общей стоимости от стартовой до конечной клетки
 
-            gScore[start] = 0; // Вес клетки
-            fScore[start] = GetDistance(start, end); // Дистанция от текущей клетки до конечной
+            gScore[start] = 0; // Начальная стоимость равна 0
+            fScore[start] = GetDistance(start, end); // Оценка расстояния от текущей клетки до конечной
 
-            while (usableCoords.Count > 0)
+            while (openSet.Count > 0) // Пока есть доступные координаты
             {
-                double minFScore = double.MaxValue; // TODO: Diagonal
-                Map.Coords current = new Map.Coords();
+                double minFScore = double.MaxValue; // Инициализация минимальной стоимости
+                Coords current = new Coords(); // Текущая координата
 
-                foreach (Map.Coords coords in usableCoords)
+                // Поиск координаты с минимальным значением fScore
+                foreach (Coords coords in openSet)
                 {
-                    if (fScore[coords] < minFScore)
+                    if (fScore.ContainsKey(coords) && fScore[coords] < minFScore)
                     {
                         minFScore = fScore[coords];
                         current = coords;
                     }
                 }
 
+                // Если достигли конечной точки, восстанавливаем путь
                 if (GetDistance(current, end) == 0)
                 {
-                    return ConstructPath(dictOfThePath, current);
+                    return ConstructPath(pathDictionary, current);
                 }
 
-                usableCoords.Remove(current); // Координаты, на которые уже сходили
-                unusableCoords.Add(current);
+                openSet.Remove(current); // Удаляем текущую координату из открытых
+                closedSet.Add(current); // Добавляем в закрытые
 
-                foreach (Map.Coords neighbor in GetNeighbors(current))
+                // Исследуем соседние координаты
+                foreach (Coords neighbor in GetNeighbors(current))
                 {
-                    if (unusableCoords.Contains(neighbor))
+                    if (closedSet.Contains(neighbor)) // Если сосед уже исследован, пропускаем
                         continue;
 
-                    double tempGScore = gScore[current] + GetGScore(neighbor);
+                    double tentativeGScore = gScore[current] + GetGScore(neighbor); // Временная стоимость пути
 
-                    if (!usableCoords.Contains(neighbor))
-                        usableCoords.Add(neighbor);
+                    if (!openSet.Contains(neighbor)) // Если сосед не в открытых координатах, добавляем его
+                        openSet.Add(neighbor);
 
                     double neighborGScore = double.MaxValue;
 
+                    // Если сосед уже имеет стоимость, берем ее
                     if (gScore.ContainsKey(neighbor))
                     {
                         neighborGScore = gScore[neighbor];
                     }
 
-                    if (tempGScore >= neighborGScore)
+                    // Если временная стоимость больше или равна стоимости соседа, пропускаем
+                    if (tentativeGScore >= neighborGScore)
                     {
                         continue;
                     }
 
-                    dictOfThePath[neighbor] = current;
-                    gScore[neighbor] = tempGScore;
+                    // Обновляем информацию о пути
+                    pathDictionary[neighbor] = current;
+                    gScore[neighbor] = tentativeGScore;
                     fScore[neighbor] = gScore[neighbor] + GetDistance(neighbor, end);
                 }
             }
 
-            return new List<Map.Coords>();
+            return new List<Coords>(); // Возвращаем пустой список, если путь не найден
         }
 
-
-        private List<Map.Coords> GetNeighbors(Map.Coords current)
+        /// <summary>
+        /// Метод получения соседей клетки
+        /// </summary>
+        /// <param name="current">Текущие координаты клетки</param>
+        /// <returns></returns>
+        private List<Coords> GetNeighbors(Coords current)
         {
-            var neighbors = new List<Map.Coords>();
+            var neighbors = new List<Coords>();
 
             int[,] directions = new int[,]
             {
-            { -1, 0 }, // Лево
-            { 1, 0 },  // Право
-            { 0, -1 }, // Низ
-            { 0, 1 },  // Верх
-            { -1, -1 }, // Юго-запад
-            { -1, 1 },  // Северо-запад
-            { 1, -1 },  // Юго-восток
-            { 1, 1 }    // Юго-запад
+                { -1, 0 }, // Лево
+                { 1, 0 },  // Право
+                { 0, -1 }, // Низ
+                { 0, 1 },  // Верх
+                { -1, -1 }, // Юго-запад
+                { -1, 1 },  // Северо-запад
+                { 1, -1 },  // Юго-восток
+                { 1, 1 }    // Северо-восток
             };
 
-            for (int i = 0; i < directions.Length / 2; i++)
+            for (int i = 0; i < directions.GetLength(0); i++)
             {
                 int newX = current.x + directions[i, 0];
                 int newY = current.y + directions[i, 1];
 
-                if (_map.IsInAMap(newX, newY))
+                if (_map.IsInAMap(new Coords(newX, newY))) // Проверяем, находится ли новая координата в пределах карты
                 {
-                    neighbors.Add(new Map.Coords(newX, newY));
+                    neighbors.Add(new Coords(newX, newY)); // Добавляем соседнюю координату
                 }
             }
 
             return neighbors;
         }
 
-        private double GetGScore(Map.Coords neighbor)
+        /// <summary>
+        /// Метод получения стоимости перемещения в зависимости от высоты
+        /// </summary>
+        /// <param name="neighbor">Координата клетки</param>
+        /// <returns>Возвращает стоимость перемещения</returns>
+        private double GetGScore(Coords neighbor)
         {
-            double baseCost = 1;
+            double baseCost = 0; // Базовая стоимость
 
-            int height = _map.GetHeight(neighbor.x, neighbor.y);
+            sbyte height = _map.GetHeight(new Coords(neighbor.x, neighbor.y)); // Получение высоты
+            baseCost = _costDict[height];
 
-            switch (height)
-            {
-                case -3:
-                    baseCost = 4;
-                    break;
-                case -2:
-                    baseCost = 3;
-                    break;
-                case -1:
-                    baseCost = 2;
-                    break;
-                case 0:
-                    baseCost = 1;
-                    break;
-                case 1:
-                    baseCost = 2;
-                    break;
-                case 2:
-                    baseCost = 3;
-                    break;
-                case 3:
-                    baseCost = 4;
-                    break;
-                case 4:
-                    baseCost = 5;
-                    break;
-                case 5:
-                    baseCost = 7;
-                    break;
-            }
-
+            // Увеличиваем стоимость, если диагональ
             if ((neighbor.x != 0) && (neighbor.y != 0))
             {
-                baseCost *= 1.4;
+                baseCost *= DIAONAL;
             }
 
-            return baseCost;
+            return baseCost; // Возвращаем стоимость
         }
 
-        private double GetDistance(Map.Coords a, Map.Coords b)
+        /// <summary>
+        /// Метод, вычисляющий расстояние между двумя клетками
+        /// </summary>
+        /// <param name="a">Координата от которой идти</param>
+        /// <param name="b">Координата к которой идти</param>
+        /// <returns></returns>
+        private double GetDistance(Coords a, Coords b)
         {
-            return Math.Sqrt( Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y) );
+            return Math.Sqrt(Math.Pow(a.x - b.x, 2) + Math.Pow(a.y - b.y, 2));
         }
 
-        private List<Map.Coords> ConstructPath(Dictionary<Map.Coords, Map.Coords> dictOfThePath, Map.Coords current)
+        // Восстановление пути на основе словаря
+        private List<Coords> ConstructPath(Dictionary<Coords, Coords> pathDictionary, Coords current)
         {
-            List<Map.Coords> totalPath = new List<Map.Coords> { current };
+            List<Coords> totalPath = new List<Coords> { current };
 
-            while (dictOfThePath.ContainsKey(current))
+            while (pathDictionary.ContainsKey(current))
             {
-                current = dictOfThePath[current];
-                totalPath.Add(current);
+                current = pathDictionary[current]; // Переход к предыдущей координате
+                totalPath.Add(current); // Добавление в список пути
             }
 
-            return totalPath;
+            totalPath.Reverse();
+            return totalPath; // Возвращаем полный путь
         }
     }
 }

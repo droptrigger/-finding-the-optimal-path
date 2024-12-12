@@ -48,7 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="controller\Controller.cs" />
+    <Compile Include="controller\PatternController.cs" />
+    <Compile Include="model\Path.cs" />
     <Compile Include="model\PathFinder.cs" />
+    <Compile Include="model\Pattern.cs" />
+    <Compile Include="model\ReaderPatternFile.cs" />
     <Compile Include="view\InMemory.cs" />
     <Compile Include="model\Map.cs" />
     <Compile Include="model\TopologyGenerator.cs" />
@@ -58,6 +62,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="patterns\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,49 +1,73 @@
 ﻿using System;
+using System.Collections.Generic;
+using static universitycollege.finding.model.Map;
 
 namespace universitycollege.finding.model
 {
     public class TopologyGenerator
     {
-        /// <summary>
-        /// The method of creating a new hill
-        /// </summary>
-        /// <param name="map">A reference to an object of the map class</param>
-        /// <param name="hillCenter">A reference to an object of the point class</param>
-        /// <exception cref="IndexOutOfRangeException">If the point is outside the map</exception>
-        public void AddHill(Map map, int x, int y, sbyte height)
+        private Map _map;
+
+        public TopologyGenerator(Map map) 
         {
-            if (!map.PointIsInAMap(x, y))
+            _map = map;
+        }
+
+        /// <summary>
+        /// Метод рисования по паттерну
+        /// </summary>
+        /// <param name="pattern">Ссылка на объект класса Pattern</param>
+        /// <param name="coords">Координаты центра</param>
+        public void AppPatternTopology(Pattern pattern, Coords coords)
+        {
+            Dictionary<Coords, sbyte> PatternCoords = pattern.GetPatternCoords(_map, coords);
+
+            foreach (KeyValuePair<Coords, sbyte> coordsPattern in PatternCoords)
             {
-                throw new IndexOutOfRangeException("Index out of range");
+                _map.Update(coordsPattern.Key, coordsPattern.Value);
+            }
+        }
+
+        /// <summary>
+        /// Метод для создания равномерного холма
+        /// </summary>
+        /// <param name="coords">Координаты центра</param>
+        /// <param name="height">Масимальная высота</param>
+        /// <exception cref="IndexOutOfRangeException"></exception>
+        public void AddSymmetricalHill(Coords coords, sbyte height)
+        {
+            if (!_map.PointIsInAMap(coords))
+            {
+                throw new IndexOutOfRangeException("Координаты за пределами карты");
             }
             else
             {
                 if (height > 0)
                 {
-                    if (height > map.GetHeight(x, y))
+                    if (height > _map.GetHeight(coords))
                     {
-                        map.Update(x, y, height);
+                        _map.Update(coords, height);
                     }
-                    GenerateRadius(map, x, y, height, 1); // Положительное направление
+                    GenerateRadius(coords, height, 1); // Положительное направление
                 }
                 else
                 {
-                    if (map.IsPointAreHigher(x, y, height) || map.GetHeight(x, y) == 0)
+                    if (_map.IsPointAreHigher(coords, height) || _map.GetHeight(coords) == 0)
                     {
-                        map.Update(x, y, height);
-                        GenerateRadius(map, x, y, height, -1); // Отрицательное направление
+                        _map.Update(coords, height);
+                        GenerateRadius(coords, height, -1); // Отрицательное направление
                     }
                 }
             }
         }
 
         /// <summary>
-        /// A method for controlling the drawing of horizontal lines
+        /// Метод для контроля рисования горизонтальных линий
         /// </summary>
-        /// <param name="map">A reference to an object of the map class</param>
-        /// <param name="hillCenter">A reference to an object of the point class</param>
-        /// <param name="direction">The direction, if the mountain is higher than 0, is positive, otherwise it is negative</param>
-        public void GenerateRadius(Map map, int x, int y, sbyte height, sbyte direction)
+        /// <param name="coords"></param>
+        /// <param name="height"></param>
+        /// <param name="direction"></param>
+        private void GenerateRadius(Coords coords, sbyte height, sbyte direction)
         {
             int shiftY = 0;
             sbyte heightPoint = direction;
@@ -51,11 +75,8 @@ namespace universitycollege.finding.model
             for (int shiftX = Math.Abs(height) - 1; shiftX >= 0; shiftX--)
             {
                 DrawLineDown(
-                   map: map,
-                   x: x,
-                   y: y,
-                   shiftX: shiftX,
-                   shiftY: shiftY,
+                   coords: coords,
+                   shift: new Coords(shiftX, shiftY),
                    heightPoint: heightPoint,
                    direction: direction);
 
@@ -65,72 +86,71 @@ namespace universitycollege.finding.model
         }
 
         /// <summary>
-        /// A method that mirrors vertical lines
+        /// Метод, который рисует зеркальные горизонтальные линии
         /// </summary>
-        /// <param name="map">A reference to an object of the map class</param>
-        /// <param name="point">Reference to the point object</param>
-        /// <param name="shiftX">Offset by x</param>
-        /// <param name="shiftY">Offset by y</param>
-        /// <param name="heightPoint">Maximum height in the line</param>
-        private void DrawLineDown(Map map, int x, int y, int shiftX, int shiftY, sbyte heightPoint, sbyte direction)
+        /// <param name="coords">Координаты центра</param>
+        /// <param name="shift">Координаты сдвига</param>
+        /// <param name="heightPoint">Максимальная высота в линии</param>
+        /// <param name="direction">Направление (если -1, то рисует реку)</param>
+        private void DrawLineDown(Coords coords, Coords shift, sbyte heightPoint, sbyte direction)
         {
-            if (shiftY == 0)
+            if (shift.y == 0)
             {
-                if (map.IsXInAMap(x - shiftX))
+                if (_map.IsXInAMap(coords.x - shift.x))
                 {
-                    if ((direction > 0 && map.IsPointAreHigher(x - shiftX, y, heightPoint)) ||
-                            (direction < 0 && map.IsPointAreBelow(x - shiftX, y, heightPoint)))
+                    if ((direction > 0 && _map.IsPointAreHigher(new Coords(coords.x - shift.x, coords.y), heightPoint)) ||
+                            (direction < 0 && _map.IsPointAreBelow(new Coords(coords.x - shift.x, coords.y), heightPoint)))
                     {
-                        map.Update(x - shiftX, y, heightPoint);
+                        _map.Update(new Coords(coords.x - shift.x, coords.y), heightPoint);
                     }
                 }
-                if (map.IsXInAMap(x + shiftX))
+                if (_map.IsXInAMap(coords.x + shift.x))
                 {
-                    if ((direction > 0 && map.IsPointAreHigher(shiftX + x, y, heightPoint)) ||
-                            (direction < 0 && map.IsPointAreBelow(x + shiftX, y, heightPoint)))
+                    if ((direction > 0 && _map.IsPointAreHigher(new Coords(coords.x + shift.x, coords.y), heightPoint)) ||
+                            (direction < 0 && _map.IsPointAreBelow(new Coords(coords.x + shift.x, coords.y), heightPoint)))
                     {
-                        map.Update(x + shiftX, y, heightPoint);
+                        _map.Update(new Coords(coords.x + shift.x, coords.y), heightPoint);
                     }
 
                 }
             }
             else
             {
-                sbyte currentHeight = direction; // The initial height depends on the direction
-                sbyte plus = 1; // Height change step
-                int minPosition = 0 - shiftY;
+                sbyte currentHeight = direction; // Начальная высота зависит от направления
+                sbyte plus = 1; // Шаг изменения высоты
+                int minPosition = 0 - shift.y;
 
-                for (int topPosition = shiftY; topPosition >= minPosition; topPosition--)
+                for (int topPosition = shift.y; topPosition >= minPosition; topPosition--)
                 {
                     if (currentHeight == heightPoint)
                     {
                         plus = (sbyte)-plus;
                     }
 
-                    if (map.IsInAMap(x - shiftX, y + topPosition))
+                    Coords tempCoords = new Coords(coords.x - shift.x, coords.y + topPosition);
+                    if (_map.IsInAMap(tempCoords))
                     {
-                        if ((direction > 0 && map.IsPointAreHigher(x - shiftX, y + topPosition, currentHeight)) ||
-                            (direction < 0 && map.IsPointAreBelow(x - shiftX, y + topPosition, currentHeight)))
+                        if ((direction > 0 && _map.IsPointAreHigher(tempCoords, currentHeight)) ||
+                            (direction < 0 && _map.IsPointAreBelow(tempCoords, currentHeight)))
                         {
-                            map.Update(
-                                x: x - shiftX,
-                                y: y + topPosition,
+                            _map.Update(
+                                coords: tempCoords,
                                 height: currentHeight);
                         }
                     }
-                    if (map.IsInAMap(x + shiftX, y + topPosition))
+                    tempCoords = new Coords(coords.x + shift.x, coords.y + topPosition);
+                    if (_map.IsInAMap(tempCoords))
                     {
-                        if ((direction > 0 && map.IsPointAreHigher(x + shiftX, y + topPosition, currentHeight)) ||
-                            (direction < 0 && map.IsPointAreBelow(x + shiftX, y + topPosition, currentHeight)))
+                        if ((direction > 0 && _map.IsPointAreHigher(tempCoords, currentHeight)) ||
+                            (direction < 0 && _map.IsPointAreBelow(tempCoords, currentHeight)))
                         {
-                            map.Update(
-                                x: x + shiftX,
-                                y: y + topPosition,
+                            _map.Update(
+                                coords: tempCoords,
                                 height: currentHeight);
                         }
                     }
 
-                    currentHeight += (sbyte)(plus * direction); // Changing the height depending on the direction
+                    currentHeight += (sbyte)(plus * direction); // Изменение высоты в зависимости от направления
                 }
             }
         }
