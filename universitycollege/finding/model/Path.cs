@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using universitycollege.finding.view;
+using static universitycollege.finding.model.Map;
 
 namespace universitycollege.finding.model
 {
@@ -146,11 +147,30 @@ namespace universitycollege.finding.model
         /// </summary>
         private void GetAmount() // TODO: Доделать
         {
-            double amount = 0;
+            double amount = (int)InMemory.AmountRoad.DEFAULT_ROAD;
 
-            foreach (Map.Coords coords in _pathCoords) 
+            sbyte tempHeight = _map.GetHeight(_pathCoords[0]);
+
+            for (int i = 1; i < _pathCoords.Count; i++)
             {
-                amount += Math.Abs(_map.GetHeight(coords)) + 1;
+                int height = _map.GetHeight(_pathCoords[i]);
+                if (height < 0)
+                {
+                    amount += (short)InMemory.AmountRoad.BRIDGE + (short)InMemory.AmountRoad.BRIDGE_SUPPORT * -height;
+                }
+                else
+                {
+                    sbyte differenceHeight = Math.Abs((sbyte)(tempHeight - _map.GetHeight(_pathCoords[i]))); 
+
+                    if (differenceHeight > 0)
+                    {
+                        amount += (short)InMemory.AmountRoad.UPPER_ROAD * differenceHeight;
+                    }
+                    else
+                    {
+                        amount += (short)InMemory.AmountRoad.DEFAULT_ROAD;
+                    }
+                }
             }
 
             _amount = amount;

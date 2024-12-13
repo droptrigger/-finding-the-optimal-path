@@ -25,6 +25,14 @@ namespace universitycollege.finding.view
             MAX_Y_MAP = 1000
         }
 
+        public enum AmountRoad
+        {
+            BRIDGE = 300,
+            BRIDGE_SUPPORT = 100,
+            DEFAULT_ROAD = 50,
+            UPPER_ROAD = 250
+        }
+
         public enum TypesOfPath
         {
             OPTIMAZE = 0,

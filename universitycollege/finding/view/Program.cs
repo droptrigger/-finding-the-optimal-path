@@ -16,14 +16,14 @@ namespace universitycollege.finding
             stopwatch.Start();
             long memoryBefore = GC.GetTotalMemory(true);
 
-            Controller controller = new Controller();
-            Map map = controller.GenerateMap(25, 25, 0);
-
-            TopologyGenerator generator = new TopologyGenerator(map);
-            generator.AppPatternTopology(new Pattern("square.txt"), new Map.Coords(12, 12));
-
             PatternController patternController = new PatternController();
             List<Pattern> patterns = patternController.AllPatternsList;
+
+            Controller controller = new Controller();
+            Map map = controller.GenerateMap(25, 25, 25);
+
+            TopologyGenerator generator = new TopologyGenerator(map);
+            // generator.AppPatternTopology(new Pattern("square_four.txt"), new Map.Coords(12, 12));
 
             foreach (Pattern pattern in patterns)
             {
