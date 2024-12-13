@@ -8,7 +8,7 @@ namespace universitycollege.finding.model
     {
         private Map _map;
 
-        public TopologyGenerator(Map map) 
+        public TopologyGenerator(Map map)
         {
             _map = map;
         }

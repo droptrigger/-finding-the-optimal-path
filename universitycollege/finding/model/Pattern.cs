@@ -34,6 +34,27 @@ namespace universitycollege.finding.model
             ReaderPatternFile.CreatePattern(patternArr, fileName);
             GetCenterCoords();
         }
+        
+        /// <summary>
+        /// Метод, для реверсии всех цифр в массиве
+        /// </summary>
+        public void SetNegativeArr()
+        {
+            for (int i = 0; i < _patternArr.GetLength(0); i++)
+            {
+                for (int j = 0; j < _patternArr.GetLength(1); j++)
+                {
+                    if (_patternArr[i,j] > 3)
+                    {
+                        _patternArr[i, j] = -3;
+                    }
+                    else
+                    {
+                        _patternArr[i, j] = (sbyte)-_patternArr[i, j];
+                    }
+                }
+            }
+        }
 
         private void GetCenterCoords()
         {
