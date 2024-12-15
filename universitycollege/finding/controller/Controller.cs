@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using universitycollege.finding.model;
 using universitycollege.finding.view;
 
 namespace universitycollege.finding.controller
 {
+    /// <summary>
+    /// Контроллер для генерации ландшафта
+    /// </summary>
     public class Controller
     {
         public Map GenerateMap(int x, int y, int numberOfGenerations)

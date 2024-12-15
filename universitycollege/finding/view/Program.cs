@@ -8,7 +8,7 @@ using universitycollege.finding.view;
 
 namespace universitycollege.finding
 {
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -20,7 +20,7 @@ namespace universitycollege.finding
             List<Pattern> patterns = patternController.AllPatternsList;
 
             Controller controller = new Controller();
-            Map map = controller.GenerateMap(25, 25, 25);
+            Map map = controller.GenerateMap(50, 50, 25);
 
             TopologyGenerator generator = new TopologyGenerator(map);
             // generator.AppPatternTopology(new Pattern("square_four.txt"), new Map.Coords(12, 12));
@@ -30,11 +30,10 @@ namespace universitycollege.finding
                 Console.WriteLine(pattern);
             }
 
-            Path optimazePath = new Path(map, InMemory.TypesOfPath.OPTIMAZE);
-            Path hardPath = new Path(map, InMemory.TypesOfPath.HARD);
+            Path optimazePath = new Path(map);
+            LinnearPath hardPath = new LinnearPath(map);
 
-            Console.WriteLine(optimazePath.Amount + " " + hardPath.Amount);
-            if (optimazePath < hardPath)
+            if (map.GetAmount(optimazePath) < map.GetAmount(hardPath))
             {
                 Console.WriteLine("Путь дешевле чем напрямую");
             }

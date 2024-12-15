@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using universitycollege.finding.model;
 using universitycollege.finding.view;
 
 namespace universitycollege.finding.controller
 {
+    /// <summary>
+    /// Контроллер для выбранных шаблонов рисунков
+    /// </summary>
     public class PatternController
     {
         private List<Pattern> _allPatternsList;
