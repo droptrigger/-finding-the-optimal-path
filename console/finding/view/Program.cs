@@ -20,22 +20,22 @@ namespace universitycollege.finding
             List<Pattern> patterns = patternController.AllPatternsList;
 
             Controller controller = new Controller();
-            Map map = controller.GenerateMap(50, 50, 25);
+            Map map = controller.GenerateMap(25, 25, 25);
 
             TopologyGenerator generator = new TopologyGenerator(map);
-            // generator.AppPatternTopology(new Pattern("square_four.txt"), new Map.Coords(12, 12));
+            // generator.AppPatternTopology(new Pattern("base_five.txt"), new Map.Coords(12, 12));
 
-            foreach (Pattern pattern in patterns)
-            {
-                Console.WriteLine(pattern);
-            }
+            //foreach (Pattern pattern in patterns)
+            //{
+            //    Console.WriteLine(pattern);
+            //}
 
             Path optimazePath = new Path(map);
             LinnearPath hardPath = new LinnearPath(map);
 
             if (map.GetAmount(optimazePath) < map.GetAmount(hardPath))
             {
-                Console.WriteLine("Путь дешевле чем напрямую");
+                Colorful.Console.WriteLine("Путь дешевле чем напрямую", Color.White);
             }
 
             DrawMapToConsole(map, optimazePath);

@@ -18,7 +18,7 @@ namespace universitycollege.finding.model
         /// </summary>
         /// <param name="pattern">Reference to an object of the Pattern class</param>
         /// <param name="coords">Coordinates of the center</param>
-        public void AppPatternTopology(Pattern pattern, Coords coords)
+        public void AddPatternTopology(Pattern pattern, Coords coords)
         {
             Dictionary<Coords, sbyte> PatternCoords = pattern.GetPatternCoords(_map, coords);
 

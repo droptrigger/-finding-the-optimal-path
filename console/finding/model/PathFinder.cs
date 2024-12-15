@@ -19,15 +19,15 @@ namespace universitycollege.finding.model
         public List<Coords> FindPath(Coords start, Coords end)
         {
             _costDict = InMemory.BicicleCost;
-            HashSet<Coords> openSet = new HashSet<Coords>(); // Координаты, доступные для исследования
-            HashSet<Coords> closedSet = new HashSet<Coords>(); // Координаты, которые уже исследованы
+            HashSet<Coords> openSet = new HashSet<Coords>(); // Coordinates available for exploration
+            HashSet<Coords> closedSet = new HashSet<Coords>(); // Coordinates that have already been explored
 
             Dictionary<Coords, Coords> pathDictionary = new Dictionary<Coords, Coords>();
 
             openSet.Add(start);
 
-            Dictionary<Coords, double> gScore = new Dictionary<Coords, double>(); // Словарь для хранения стоимости пути от стартовой до текущей клетки
-            Dictionary<Coords, double> fScore = new Dictionary<Coords, double>(); // Словарь для хранения общей стоимости от стартовой до конечной клетки
+            Dictionary<Coords, double> gScore = new Dictionary<Coords, double>(); // Dictionary to store the cost of the path from start to current cell
+            Dictionary<Coords, double> fScore = new Dictionary<Coords, double>(); // Dictionary to store the total cost from start to end cell
 
             gScore[start] = 0;
             fScore[start] = GetDistance(start, end);
@@ -37,7 +37,7 @@ namespace universitycollege.finding.model
                 double minFScore = double.MaxValue;
                 Coords current = new Coords();
 
-                // Поиск координаты с минимальным значением fScore
+                // Find the coordinate with the minimum fScore value
                 foreach (Coords coords in openSet)
                 {
                     if (fScore.ContainsKey(coords) && fScore[coords] < minFScore)
@@ -55,7 +55,7 @@ namespace universitycollege.finding.model
                 openSet.Remove(current);
                 closedSet.Add(current);
 
-                // Исследуем соседние координаты
+                // Explore neighboring coordinates
                 foreach (Coords neighbor in GetNeighbors(current))
                 {
                     if (closedSet.Contains(neighbor))
@@ -88,9 +88,9 @@ namespace universitycollege.finding.model
         }
 
         /// <summary>
-        /// Метод получения соседей клетки
+        /// Method to get the neighbors of a cell
         /// </summary>
-        /// <param name="current">Текущие координаты клетки</param>
+        /// <param name="current">Current cell coordinates</param>
         /// <returns></returns>
         private List<Coords> GetNeighbors(Coords current)
         {
@@ -98,14 +98,14 @@ namespace universitycollege.finding.model
 
             int[,] directions = new int[,]
             {
-                { -1, 0 },  // Лево
-                { 1, 0 },   // Право
-                { 0, -1 },  // Низ
-                { 0, 1 },   // Верх
-                { -1, -1 }, // Левый нижний
-                { -1, 1 },  // Левый верхний
-                { 1, -1 },  // Правый нижний
-                { 1, 1 }    // Правый верхний
+                { -1, 0 },  // Left
+                { 1, 0 },   // Right
+                { 0, -1 },  // Down
+                { 0, 1 },   // Up
+                { -1, -1 }, // Bottom left
+                { -1, 1 },  // Top left
+                { 1, -1 },  // Bottom right
+                { 1, 1 }    // Top right
             };
 
             for (int i = 0; i < directions.GetLength(0); i++)
@@ -123,10 +123,10 @@ namespace universitycollege.finding.model
         }
 
         /// <summary>
-        /// Метод получения стоимости перемещения в зависимости от высоты
+        /// Method to get the cost of moving based on height
         /// </summary>
-        /// <param name="neighbor">Координата клетки</param>
-        /// <returns>Возвращает стоимость перемещения</returns>
+        /// <param name="neighbor">Cell coordinates</param>
+        /// <returns>Returns the cost of movement</returns>
         private double GetGScore(Coords neighbor)
         {
             double baseCost = 0;
@@ -143,10 +143,10 @@ namespace universitycollege.finding.model
         }
 
         /// <summary>
-        /// Метод, вычисляющий расстояние между двумя клетками
+        /// Method to calculate the distance between two cells
         /// </summary>
-        /// <param name="a">Координата от которой идти</param>
-        /// <param name="b">Координата к которой идти</param>
+        /// <param name="a">Coordinate from which to go</param>
+        /// <param name="b">Coordinate to which to go</param>
         /// <returns></returns>
         private double GetDistance(Coords a, Coords b)
         {
@@ -154,10 +154,10 @@ namespace universitycollege.finding.model
         }
 
         /// <summary>
-        /// Восстановление пути
+        /// Path reconstruction
         /// </summary>
-        /// <param name="pathDictionary">Словарь с координатами</param>
-        /// <param name="current">Конечная координата</param>
+        /// <param name="pathDictionary">Dictionary with coordinates</param>
+        /// <param name="current">Ending coordinate</param>
         /// <returns></returns>
         private List<Coords> ConstructPath(Dictionary<Coords, Coords> pathDictionary, Coords current)
         {
