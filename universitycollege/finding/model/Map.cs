@@ -1,6 +1,5 @@
 ﻿using universitycollege.finding.view;
 using System;
-using static universitycollege.finding.model.Map;
 
 namespace universitycollege.finding.model
 {
@@ -26,9 +25,6 @@ namespace universitycollege.finding.model
         public int MapSizeX => _mapSizeX;
         public int MapSizeY => _mapSizeY;
 
-        // TODO: Доделать
-        public sbyte MaxHeight;
-        public sbyte StepHeight;
 
         /// <summary>
         /// Конструктор
@@ -44,11 +40,11 @@ namespace universitycollege.finding.model
 
                 if (dimensionX > (int)InMemory.Constants.MAX_X_MAP)
                 {
-                    message += $"Max X value is: {InMemory.Constants.MAX_X_MAP}\n";
+                    message += $"Максимальное значение ширины карты: {InMemory.Constants.MAX_X_MAP}";
                 }
                 if (dimensionY > (int)InMemory.Constants.MAX_Y_MAP)
                 {
-                    message += $"Max Y value is: {InMemory.Constants.MAX_Y_MAP}";
+                    message += $"\nМаксимальное значение высоты карты: {InMemory.Constants.MAX_Y_MAP}";
                 }
 
                 throw new IndexOutOfRangeException(message);
@@ -59,8 +55,6 @@ namespace universitycollege.finding.model
                 _mapSizeY = dimensionY;
 
                 Random rnd = new Random();
-                MaxHeight = (sbyte)rnd.Next(127);
-                StepHeight = (sbyte)(MaxHeight / 5);
                 _mapArr = new sbyte[dimensionX, dimensionY];
             }
         }
@@ -96,6 +90,11 @@ namespace universitycollege.finding.model
             return ((x < MapSizeX) && (x >= 0));
         }
 
+        public bool IsYInAMap(int y)
+        {
+            return ((y < MapSizeY) && (y >= 0));
+        }
+
         public bool IsPointAreHigher(Coords coords, sbyte height)
         {
             return (_mapArr[coords.x, coords.y] < height);
@@ -104,6 +103,46 @@ namespace universitycollege.finding.model
         public bool IsPointAreBelow(Coords coords, sbyte height)
         {
             return (_mapArr[coords.x, coords.y] > height && _mapArr[coords.x, coords.y] < 1);
+        }
+
+        public void AddMap(Map addedMap, Coords centerCoords)
+        {
+            
+        }
+
+        /// <summary>
+        /// Метод получения стоимости перемещения
+        /// </summary>
+        public int GetAmount(Path path)
+        {
+            int amount = (int)InMemory.AmountRoad.DEFAULT_ROAD;
+
+            sbyte tempHeight = GetHeight(path.PathCoords[0]);
+
+            for (int i = 1; i < path.PathCoords.Count; i++)
+            {
+                sbyte height = GetHeight(path.PathCoords[i]);
+                if (height < 0)
+                {
+                    amount += (short)InMemory.AmountRoad.BRIDGE + (short)InMemory.AmountRoad.BRIDGE_SUPPORT * -height;
+                }
+                else
+                {
+                    sbyte differenceHeight = Math.Abs((sbyte)(tempHeight - GetHeight(path.PathCoords[i])));
+
+                    if (differenceHeight > 0)
+                    {
+                        amount += (short)InMemory.AmountRoad.UPPER_ROAD * differenceHeight;
+                    }
+                    else
+                    {
+                        amount += (short)InMemory.AmountRoad.DEFAULT_ROAD;
+                    }
+                }
+                tempHeight = height;
+            }
+
+            return amount;
         }
     }
 }

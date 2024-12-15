@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using universitycollege.finding.view;
 using static universitycollege.finding.model.Map;
 
 namespace universitycollege.finding.model

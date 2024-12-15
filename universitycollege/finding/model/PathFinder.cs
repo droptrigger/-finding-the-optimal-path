@@ -9,7 +9,7 @@ namespace universitycollege.finding.model
     {
         private Map _map;
         private Dictionary<sbyte, double> _costDict;
-        private double DIAONAL = Math.Sqrt(2);
+        private static readonly double DIAONAL = Math.Sqrt(2);
 
         public PathFinder(Map map)
         {
@@ -22,20 +22,20 @@ namespace universitycollege.finding.model
             HashSet<Coords> openSet = new HashSet<Coords>(); // Координаты, доступные для исследования
             HashSet<Coords> closedSet = new HashSet<Coords>(); // Координаты, которые уже исследованы
 
-            Dictionary<Coords, Coords> pathDictionary = new Dictionary<Coords, Coords>(); // Словарь для восстановления пути
+            Dictionary<Coords, Coords> pathDictionary = new Dictionary<Coords, Coords>();
 
-            openSet.Add(start); // Добавляем начальную точку в открытые координаты
+            openSet.Add(start);
 
             Dictionary<Coords, double> gScore = new Dictionary<Coords, double>(); // Словарь для хранения стоимости пути от стартовой до текущей клетки
             Dictionary<Coords, double> fScore = new Dictionary<Coords, double>(); // Словарь для хранения общей стоимости от стартовой до конечной клетки
 
-            gScore[start] = 0; // Начальная стоимость равна 0
-            fScore[start] = GetDistance(start, end); // Оценка расстояния от текущей клетки до конечной
+            gScore[start] = 0;
+            fScore[start] = GetDistance(start, end);
 
-            while (openSet.Count > 0) // Пока есть доступные координаты
+            while (openSet.Count > 0)
             {
-                double minFScore = double.MaxValue; // Инициализация минимальной стоимости
-                Coords current = new Coords(); // Текущая координата
+                double minFScore = double.MaxValue;
+                Coords current = new Coords();
 
                 // Поиск координаты с минимальным значением fScore
                 foreach (Coords coords in openSet)
@@ -47,48 +47,44 @@ namespace universitycollege.finding.model
                     }
                 }
 
-                // Если достигли конечной точки, восстанавливаем путь
                 if (GetDistance(current, end) == 0)
                 {
                     return ConstructPath(pathDictionary, current);
                 }
 
-                openSet.Remove(current); // Удаляем текущую координату из открытых
-                closedSet.Add(current); // Добавляем в закрытые
+                openSet.Remove(current);
+                closedSet.Add(current);
 
                 // Исследуем соседние координаты
                 foreach (Coords neighbor in GetNeighbors(current))
                 {
-                    if (closedSet.Contains(neighbor)) // Если сосед уже исследован, пропускаем
+                    if (closedSet.Contains(neighbor))
                         continue;
 
-                    double tentativeGScore = gScore[current] + GetGScore(neighbor); // Временная стоимость пути
+                    double tentativeGScore = gScore[current] + GetGScore(neighbor);
 
-                    if (!openSet.Contains(neighbor)) // Если сосед не в открытых координатах, добавляем его
+                    if (!openSet.Contains(neighbor))
                         openSet.Add(neighbor);
 
                     double neighborGScore = double.MaxValue;
 
-                    // Если сосед уже имеет стоимость, берем ее
                     if (gScore.ContainsKey(neighbor))
                     {
                         neighborGScore = gScore[neighbor];
                     }
 
-                    // Если временная стоимость больше или равна стоимости соседа, пропускаем
                     if (tentativeGScore >= neighborGScore)
                     {
                         continue;
                     }
 
-                    // Обновляем информацию о пути
                     pathDictionary[neighbor] = current;
                     gScore[neighbor] = tentativeGScore;
                     fScore[neighbor] = gScore[neighbor] + GetDistance(neighbor, end);
                 }
             }
 
-            return new List<Coords>(); // Возвращаем пустой список, если путь не найден
+            return new List<Coords>();
         }
 
         /// <summary>
@@ -102,14 +98,14 @@ namespace universitycollege.finding.model
 
             int[,] directions = new int[,]
             {
-                { -1, 0 }, // Лево
-                { 1, 0 },  // Право
-                { 0, -1 }, // Низ
-                { 0, 1 },  // Верх
-                { -1, -1 }, // Юго-запад
-                { -1, 1 },  // Северо-запад
-                { 1, -1 },  // Юго-восток
-                { 1, 1 }    // Северо-восток
+                { -1, 0 },  // Лево
+                { 1, 0 },   // Право
+                { 0, -1 },  // Низ
+                { 0, 1 },   // Верх
+                { -1, -1 }, // Левый нижний
+                { -1, 1 },  // Левый верхний
+                { 1, -1 },  // Правый нижний
+                { 1, 1 }    // Правый верхний
             };
 
             for (int i = 0; i < directions.GetLength(0); i++)
@@ -117,9 +113,9 @@ namespace universitycollege.finding.model
                 int newX = current.x + directions[i, 0];
                 int newY = current.y + directions[i, 1];
 
-                if (_map.IsInAMap(new Coords(newX, newY))) // Проверяем, находится ли новая координата в пределах карты
+                if (_map.IsInAMap(new Coords(newX, newY)))
                 {
-                    neighbors.Add(new Coords(newX, newY)); // Добавляем соседнюю координату
+                    neighbors.Add(new Coords(newX, newY));
                 }
             }
 
@@ -133,18 +129,17 @@ namespace universitycollege.finding.model
         /// <returns>Возвращает стоимость перемещения</returns>
         private double GetGScore(Coords neighbor)
         {
-            double baseCost = 0; // Базовая стоимость
+            double baseCost = 0;
 
-            sbyte height = _map.GetHeight(new Coords(neighbor.x, neighbor.y)); // Получение высоты
+            sbyte height = _map.GetHeight(new Coords(neighbor.x, neighbor.y));
             baseCost = _costDict[height];
 
-            // Увеличиваем стоимость, если диагональ
             if ((neighbor.x != 0) && (neighbor.y != 0))
             {
                 baseCost *= DIAONAL;
             }
 
-            return baseCost; // Возвращаем стоимость
+            return baseCost;
         }
 
         /// <summary>
@@ -158,19 +153,24 @@ namespace universitycollege.finding.model
             return Math.Sqrt(Math.Pow(a.x - b.x, 2) + Math.Pow(a.y - b.y, 2));
         }
 
-        // Восстановление пути на основе словаря
-        private List<Coords> ConstructPath(Dictionary<Coords, Coords> pathDictionary, Coords current)
+        /// <summary>
+        /// Восстановление пути
+        /// </summary>
+        /// <param name="pathDictionary">Словарь с координатами</param>
+        /// <param name="current">Конечная координата</param>
+        /// <returns></returns>
+        private List<Coords> ConstructPath(Dictionary<Coords, Coords> pathDictionary, Coords current) // TODO: Возвращать путь
         {
             List<Coords> totalPath = new List<Coords> { current };
 
             while (pathDictionary.ContainsKey(current))
             {
-                current = pathDictionary[current]; // Переход к предыдущей координате
-                totalPath.Add(current); // Добавление в список пути
+                current = pathDictionary[current];
+                totalPath.Add(current);
             }
 
             totalPath.Reverse();
-            return totalPath; // Возвращаем полный путь
+            return totalPath;
         }
     }
 }

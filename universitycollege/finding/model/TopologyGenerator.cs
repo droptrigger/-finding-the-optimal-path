@@ -48,14 +48,14 @@ namespace universitycollege.finding.model
                     {
                         _map.Update(coords, height);
                     }
-                    GenerateRadius(coords, height, 1); // Положительное направление
+                    GenerateRadius(coords, height, 1);
                 }
                 else
                 {
                     if (_map.IsPointAreHigher(coords, height) || _map.GetHeight(coords) == 0)
                     {
                         _map.Update(coords, height);
-                        GenerateRadius(coords, height, -1); // Отрицательное направление
+                        GenerateRadius(coords, height, -1);
                     }
                 }
             }

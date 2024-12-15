@@ -33,12 +33,6 @@ namespace universitycollege.finding.view
             UPPER_ROAD = 250
         }
 
-        public enum TypesOfPath
-        {
-            OPTIMAZE = 0,
-            HARD = 1
-        }
-
         public static readonly Dictionary<sbyte, double> Bicicle = new Dictionary<sbyte, double>
         {
             { -3, 4 },

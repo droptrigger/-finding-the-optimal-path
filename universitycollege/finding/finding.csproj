@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="controller\Controller.cs" />
     <Compile Include="controller\PatternController.cs" />
+    <Compile Include="model\LinnearPath.cs" />
     <Compile Include="model\Path.cs" />
     <Compile Include="model\PathFinder.cs" />
     <Compile Include="model\Pattern.cs" />
