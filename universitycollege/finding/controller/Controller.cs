@@ -5,7 +5,7 @@ using universitycollege.finding.view;
 namespace universitycollege.finding.controller
 {
     /// <summary>
-    /// Контроллер для генерации ландшафта
+    /// The controller for generating the landscape
     /// </summary>
     public class Controller
     {
@@ -16,12 +16,12 @@ namespace universitycollege.finding.controller
             Random rnd = new Random();
             TopologyGenerator generator = new TopologyGenerator(map);
 
-            //Генерация рандомных холмов
+            // Generating random hills
             for (int i = 0; i < numberOfGenerations; i++)
             {
                 generator.AddSymmetricalHill(
                     coords: new Map.Coords(rnd.Next(x), rnd.Next(y)),
-                    height: (sbyte)(rnd.Next(InMemory.Colors.Count) - 3));
+                    height: (sbyte)(rnd.Next(InMemory.ColorsForWrite.Count) - 3));
             }
 
             return map;

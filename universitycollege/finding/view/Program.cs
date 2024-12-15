@@ -59,7 +59,7 @@ namespace universitycollege.finding
                 {
                     int height = map.MapArr[x, y];
 
-                    Color color = ColorTranslator.FromHtml(InMemory.Colors[height]);
+                    Color color = ColorTranslator.FromHtml(InMemory.ColorsForWrite[height]);
                     if (path.PathCoords != null && path.PathCoords.Contains(new Map.Coords(x, y)))
                     {
                         Colorful.Console.Write($"{Math.Abs(height)} ", Color.Black);

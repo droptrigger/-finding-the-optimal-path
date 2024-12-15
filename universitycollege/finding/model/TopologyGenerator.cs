@@ -14,10 +14,10 @@ namespace universitycollege.finding.model
         }
 
         /// <summary>
-        /// Метод рисования по паттерну
+        /// Method for drawing based on a pattern
         /// </summary>
-        /// <param name="pattern">Ссылка на объект класса Pattern</param>
-        /// <param name="coords">Координаты центра</param>
+        /// <param name="pattern">Reference to an object of the Pattern class</param>
+        /// <param name="coords">Coordinates of the center</param>
         public void AppPatternTopology(Pattern pattern, Coords coords)
         {
             Dictionary<Coords, sbyte> PatternCoords = pattern.GetPatternCoords(_map, coords);
@@ -29,16 +29,16 @@ namespace universitycollege.finding.model
         }
 
         /// <summary>
-        /// Метод для создания равномерного холма
+        /// Method for creating a symmetrical hill
         /// </summary>
-        /// <param name="coords">Координаты центра</param>
-        /// <param name="height">Масимальная высота</param>
-        /// <exception cref="IndexOutOfRangeException"></exception>
+        /// <param name="coords">Coordinates of the center</param>
+        /// <param name="height">Maximum height</param>
+        /// <exception cref="IndexOutOfRangeException">If coordinates outside the map</exception>
         public void AddSymmetricalHill(Coords coords, sbyte height)
         {
             if (!_map.PointIsInAMap(coords))
             {
-                throw new IndexOutOfRangeException("Координаты за пределами карты");
+                throw new IndexOutOfRangeException("Coordinates outside the map");
             }
             else
             {
@@ -62,11 +62,11 @@ namespace universitycollege.finding.model
         }
 
         /// <summary>
-        /// Метод для контроля рисования горизонтальных линий
+        /// Method for controlling the drawing of horizontal lines
         /// </summary>
-        /// <param name="coords"></param>
-        /// <param name="height"></param>
-        /// <param name="direction"></param>
+        /// <param name="coords">Сoordinates of the drawing center</param>
+        /// <param name="height">Maximum height</param>
+        /// <param name="direction">Direction (-1 - river, 1 - hill)</param>
         private void GenerateRadius(Coords coords, sbyte height, sbyte direction)
         {
             int shiftY = 0;
@@ -86,12 +86,12 @@ namespace universitycollege.finding.model
         }
 
         /// <summary>
-        /// Метод, который рисует зеркальные горизонтальные линии
+        /// Method that draws mirrored horizontal lines
         /// </summary>
-        /// <param name="coords">Координаты центра</param>
-        /// <param name="shift">Координаты сдвига</param>
-        /// <param name="heightPoint">Максимальная высота в линии</param>
-        /// <param name="direction">Направление (если -1, то рисует реку)</param>
+        /// <param name="coords">Coordinates of the center</param>
+        /// <param name="shift">Coordinates of the shift</param>
+        /// <param name="heightPoint">Maximum height in the line</param>
+        /// <param name="direction">Direction (-1 - river, 1 - hill)</param>
         private void DrawLineDown(Coords coords, Coords shift, sbyte heightPoint, sbyte direction)
         {
             if (shift.y == 0)
@@ -116,8 +116,8 @@ namespace universitycollege.finding.model
             }
             else
             {
-                sbyte currentHeight = direction; // Начальная высота зависит от направления
-                sbyte plus = 1; // Шаг изменения высоты
+                sbyte currentHeight = direction; // The initial height depends on the direction
+                sbyte plus = 1; // Height change step
                 int minPosition = 0 - shift.y;
 
                 for (int topPosition = shift.y; topPosition >= minPosition; topPosition--)
@@ -150,7 +150,7 @@ namespace universitycollege.finding.model
                         }
                     }
 
-                    currentHeight += (sbyte)(plus * direction); // Изменение высоты в зависимости от направления
+                    currentHeight += (sbyte)(plus * direction); // Height change depending on the direction
                 }
             }
         }

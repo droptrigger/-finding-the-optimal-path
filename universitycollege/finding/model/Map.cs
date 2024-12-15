@@ -27,24 +27,24 @@ namespace universitycollege.finding.model
 
 
         /// <summary>
-        /// Конструктор
+        /// Constructor
         /// </summary>
-        /// <param name="dimensionX">Ширина</param>
-        /// <param name="dimensionY">Высота</param>
-        /// <exception cref="IndexOutOfMapException">Ошибка, если превышены допустимые значения высоты и/или ширины</exception>
+        /// <param name="dimensionX">Width</param>
+        /// <param name="dimensionY">Height</param>
+        /// <exception cref="IndexOutOfMapException">Error if height and/or width exceed allowed values</exception>
         public Map(int dimensionX, int dimensionY)
         {
-            if (dimensionX > (int)InMemory.Constants.MAX_X_MAP || dimensionY > (int)InMemory.Constants.MAX_Y_MAP)
+            if (dimensionX > (int)InMemory.MaxMapSize.MAX_X_MAP || dimensionY > (int)InMemory.MaxMapSize.MAX_Y_MAP)
             {
                 string message = "";
 
-                if (dimensionX > (int)InMemory.Constants.MAX_X_MAP)
+                if (dimensionX > (int)InMemory.MaxMapSize.MAX_X_MAP)
                 {
-                    message += $"Максимальное значение ширины карты: {InMemory.Constants.MAX_X_MAP}";
+                    message += $"Maximum width of the map: {InMemory.MaxMapSize.MAX_X_MAP}";
                 }
-                if (dimensionY > (int)InMemory.Constants.MAX_Y_MAP)
+                if (dimensionY > (int)InMemory.MaxMapSize.MAX_Y_MAP)
                 {
-                    message += $"\nМаксимальное значение высоты карты: {InMemory.Constants.MAX_Y_MAP}";
+                    message += $"\nMaximum height of the map: {InMemory.MaxMapSize.MAX_Y_MAP}";
                 }
 
                 throw new IndexOutOfRangeException(message);
@@ -69,7 +69,7 @@ namespace universitycollege.finding.model
         /// </summary>
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
-        /// <param name="height">heigh</param>
+        /// <param name="height">Height</param>
         public void Update(Coords coords, sbyte height)
         {
             _mapArr[coords.x, coords.y] = height;
@@ -105,13 +105,8 @@ namespace universitycollege.finding.model
             return (_mapArr[coords.x, coords.y] > height && _mapArr[coords.x, coords.y] < 1);
         }
 
-        public void AddMap(Map addedMap, Coords centerCoords)
-        {
-            
-        }
-
         /// <summary>
-        /// Метод получения стоимости перемещения
+        /// Method to get the cost of movement
         /// </summary>
         public int GetAmount(Path path)
         {
@@ -146,4 +141,3 @@ namespace universitycollege.finding.model
         }
     }
 }
- 

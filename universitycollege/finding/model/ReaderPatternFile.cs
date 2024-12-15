@@ -8,7 +8,7 @@ namespace universitycollege.finding.model
         private static string _filePath = InMemory.PathToPattern;
 
         /// <summary>
-        /// Метод получения массива из файла
+        /// Method for obtaining an array from a file
         /// </summary>
         public static sbyte[,] GetPatternArr(string fileName)
         {
@@ -32,9 +32,9 @@ namespace universitycollege.finding.model
         }
 
         /// <summary>
-        /// Метод для создания нового шаблона из массива
+        /// Method for creating a new pattern from an array
         /// </summary>
-        /// <param name="patternArray">Массив, заполенный цифрами</param>
+        /// <param name="patternArray">Array filled with numbers</param>
         public static void CreatePattern(sbyte[,] patternArray, string fileName)
         {
             StreamWriter writer = new StreamWriter(_filePath + fileName + ".txt");
