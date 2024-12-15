@@ -65,6 +65,10 @@ namespace universitycollege.finding.model
             return tempDict;
         }
 
+        /// <summary>
+        /// Returns a string representation of the pattern
+        /// </summary>
+        /// <returns>A string containing the name and the pattern array</returns>
         public override string ToString()
         {
             string pattern = _name + "\n";
