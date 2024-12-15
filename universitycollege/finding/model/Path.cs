@@ -4,7 +4,7 @@ using static universitycollege.finding.model.Map;
 namespace universitycollege.finding.model
 {
     /// <summary>
-    /// Класс пути по карте
+    /// The class of the path on the map
     /// </summary>
     public class Path
     {

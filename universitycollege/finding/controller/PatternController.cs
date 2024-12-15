@@ -6,7 +6,7 @@ using universitycollege.finding.view;
 namespace universitycollege.finding.controller
 {
     /// <summary>
-    /// Контроллер для выбранных шаблонов рисунков
+    /// Controller for selected patterns
     /// </summary>
     public class PatternController
     {

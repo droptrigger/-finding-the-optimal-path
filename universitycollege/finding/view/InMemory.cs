@@ -6,7 +6,7 @@ namespace universitycollege.finding.view
     {
         public const string PathToPattern = @"..\..\..\..\resources\patterns\";
 
-        public static readonly Dictionary<int, string> Colors = new Dictionary<int, string>
+        public static readonly Dictionary<int, string> ColorsForWrite = new Dictionary<int, string>
         {
             { -3, "#000080" },
             { -2, "#0000FF" },
@@ -19,12 +19,15 @@ namespace universitycollege.finding.view
             { 5, "#8B0000" }
         };
 
-        public enum Constants
+        public enum MaxMapSize
         {
             MAX_X_MAP = 1000,
             MAX_Y_MAP = 1000
         }
 
+        /// <summary>
+        /// The cost of building a road
+        /// </summary>
         public enum AmountRoad
         {
             BRIDGE = 300,
@@ -33,7 +36,10 @@ namespace universitycollege.finding.view
             UPPER_ROAD = 250
         }
 
-        public static readonly Dictionary<sbyte, double> Bicicle = new Dictionary<sbyte, double>
+        /// <summary>
+        /// Weights for cycling
+        /// </summary>
+        public static readonly Dictionary<sbyte, double> BicicleCost = new Dictionary<sbyte, double>
         {
             { -3, 4 },
             { -2, 3 },

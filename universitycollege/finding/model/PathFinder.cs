@@ -18,7 +18,7 @@ namespace universitycollege.finding.model
 
         public List<Coords> FindPath(Coords start, Coords end)
         {
-            _costDict = InMemory.Bicicle;
+            _costDict = InMemory.BicicleCost;
             HashSet<Coords> openSet = new HashSet<Coords>(); // Координаты, доступные для исследования
             HashSet<Coords> closedSet = new HashSet<Coords>(); // Координаты, которые уже исследованы
 
@@ -159,7 +159,7 @@ namespace universitycollege.finding.model
         /// <param name="pathDictionary">Словарь с координатами</param>
         /// <param name="current">Конечная координата</param>
         /// <returns></returns>
-        private List<Coords> ConstructPath(Dictionary<Coords, Coords> pathDictionary, Coords current) // TODO: Возвращать путь
+        private List<Coords> ConstructPath(Dictionary<Coords, Coords> pathDictionary, Coords current)
         {
             List<Coords> totalPath = new List<Coords> { current };
 

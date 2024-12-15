@@ -15,20 +15,20 @@ namespace universitycollege.finding.model
         }
 
         /// <summary>
-        /// Метод получения строгого пути по диагонали от левого верхнего угла до правого нижнего
+        /// Method to get a strict diagonal path from the top left corner to the bottom right
         /// </summary> 
-        /// <param name="map">Ссылка на объект класса Map</param>
+        /// <param name="map">Reference to the Map class object</param>
         public void GetLinnearPath(Map map)
         {
             GetLinnearPath(map, new Map.Coords(0, 0), new Map.Coords(map.MapSizeX - 1, map.MapSizeY - 1));
         }
 
         /// <summary>
-        /// Метод получения строгого пути по диагонали от точки start до точки end
+        /// Method to get a strict diagonal path from the start point to the end point
         /// </summary>
-        /// <param name="map">Ссылка на объект класса Map</param>
-        /// <param name="start">Координата, от которой идти</param>
-        /// <param name="end">Координата, к которой идти</param>
+        /// <param name="map">Reference to the Map class object</param>
+        /// <param name="start">Coordinate from which to start</param>
+        /// <param name="end">Coordinate to which to go</param>
         public void GetLinnearPath(Map map, Map.Coords start, Map.Coords end)
         {
             int x = start.x;
@@ -50,7 +50,6 @@ namespace universitycollege.finding.model
                 {
                     if (x > end.x)
                         x--;
-
                     else
                         x++;
                 }
@@ -59,7 +58,6 @@ namespace universitycollege.finding.model
                 {
                     if (y > end.y)
                         y--;
-
                     else
                         y++;
                 }
