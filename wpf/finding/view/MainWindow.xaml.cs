@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using universitycollege.finding.model;
 using universitycollege.finding.view;
 
 namespace test
@@ -22,9 +16,21 @@ namespace test
             int x = Int32.Parse(InputX.Text);
             int y = Int32.Parse(InputY.Text);
 
-            MapWindow mapWindow = new MapWindow(x, y);
-            mapWindow.Show();
-            this.Close();
+            if (x > (int)InMemory.MaxMapSize.MAX_X_MAP || y > (int)InMemory.MaxMapSize.MAX_Y_MAP)
+            {
+                MessageBox.Show($"Максимальное значение X: {(int)InMemory.MaxMapSize.MAX_X_MAP}\n" +
+                    $"Максимальное значение Y: {(int)InMemory.MaxMapSize.MAX_Y_MAP}\n");
+            }
+            else if (x < 0 || y < 0)
+            {
+                MessageBox.Show("Размеры карты не могут быть меньше нуля!");
+            }
+            else
+            {
+                MapWindow mapWindow = new MapWindow(x, y);
+                mapWindow.Show();
+                this.Close();
+            }
         }
     }
 }

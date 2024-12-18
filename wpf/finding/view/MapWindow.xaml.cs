@@ -59,19 +59,26 @@ namespace universitycollege.finding.view
 
         private void LoadPatterns()
         {
-            _patternController = new PatternController();
-            var patterns = _patternController.AllPatternsList;
-
-            List<PatternPreview> patternPreviews = new List<PatternPreview>();
-
-            foreach (var pattern in patterns)
+            try
             {
-                var canvas = CreatePatternPreviewCanvas(pattern);
-                patternPreviews.Add(new PatternPreview { Name = pattern.Name, PreviewCanvas = canvas, Pattern = pattern });
-            }
+                _patternController = new PatternController();
+                var patterns = _patternController.AllPatternsList;
 
-            PatternListBox.ItemsSource = patternPreviews;
-            PatternListBox.SelectedIndex = 0;
+                List<PatternPreview> patternPreviews = new List<PatternPreview>();
+
+                foreach (var pattern in patterns)
+                {
+                    var canvas = CreatePatternPreviewCanvas(pattern);
+                    patternPreviews.Add(new PatternPreview { Name = pattern.Name, PreviewCanvas = canvas, Pattern = pattern });
+                }
+
+                PatternListBox.ItemsSource = patternPreviews;
+                PatternListBox.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private Canvas CreatePatternPreviewCanvas(Pattern pattern)
@@ -219,10 +226,7 @@ namespace universitycollege.finding.view
             else if (e.ChangedButton == MouseButton.Left)
             {
                 _isDrawing = true;
-                //if (PatternListBox.SelectedItem is Pattern selectedPattern)
-                //{
-                    DrawPatternAtMousePosition(e);
-                //}
+                DrawPatternAtMousePosition(e);
             }
         }
 
@@ -242,7 +246,7 @@ namespace universitycollege.finding.view
 
         private void MapCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (MapCanvas.IsMouseOver) // Проверка, находится ли мышь над канвасом
+            if (MapCanvas.IsMouseOver)
             {
                 if (_isDragging)
                 {
@@ -258,13 +262,13 @@ namespace universitycollege.finding.view
 
         private void DrawPatternAtMousePosition(MouseEventArgs e)
         {
-            if (_isDrawing && MapCanvas.IsMouseOver) // Дополнительная проверка
+            if (_isDrawing && MapCanvas.IsMouseOver)
             {
-                Point mousePosition = e.GetPosition(MapCanvas); // Измените на MapCanvas
+                Point mousePosition = e.GetPosition(MapCanvas);
                 int cellX = (int)(mousePosition.X / CellSize);
                 int cellY = (int)(mousePosition.Y / CellSize);
 
-                if (cellX >= 0 && cellX < _map.MapSizeX && cellY >= 0 && cellY < _map.MapSizeY) // Проверка границ
+                if (cellX >= 0 && cellX < _map.MapSizeX && cellY >= 0 && cellY < _map.MapSizeY)
                 {
                     _generator.AddPatternTopology(_selectedPattern, new Coords(cellX, cellY));
                     UpdateMap();
@@ -313,6 +317,5 @@ namespace universitycollege.finding.view
                 _selectedPattern = selectedPreview.Pattern;
             }
         }
-
     }
 }
