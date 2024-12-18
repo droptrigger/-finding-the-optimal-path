@@ -23,12 +23,6 @@ namespace universitycollege.finding
             Map map = controller.GenerateMap(25, 25, 25);
 
             TopologyGenerator generator = new TopologyGenerator(map);
-            // generator.AppPatternTopology(new Pattern("base_five.txt"), new Map.Coords(12, 12));
-
-            //foreach (Pattern pattern in patterns)
-            //{
-            //    Console.WriteLine(pattern);
-            //}
 
             Path optimazePath = new Path(map);
             LinnearPath hardPath = new LinnearPath(map);

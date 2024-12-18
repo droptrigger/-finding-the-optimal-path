@@ -24,7 +24,14 @@ namespace universitycollege.finding.model
                 string[] numbers = lines[i].Split(' ');
                 for (int j = 0; j < cols; j++)
                 {
-                    _patternArr[i, j] = sbyte.Parse(numbers[j]);
+                    try
+                    {
+                        _patternArr[i, j] = sbyte.Parse(numbers[j]);
+                    }
+                    catch
+                    {
+                        throw new System.Exception($"Pattern {fileName} isn't correct");
+                    }
                 }
             }
 
